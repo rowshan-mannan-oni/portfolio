@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="1440" viewBox="0 0 640 960" role="img" aria-labelledby="title desc">
+  <title id="title">FedSP-PEFT-P personalized federated learning</title>
+  <desc id="desc">The server averages shared LoRA B and type and priority embeddings across projects. Each project retains a personalized CORN head that is not aggregated. CodeBERT and LoRA A are frozen; raw issue data stays local. Simplified view of two representative clients.</desc>
+  <defs>
+    <radialGradient id="glow" cx="0.9" cy="0.1" r="1"><stop stop-color="#123c36"/><stop offset="1" stop-color="#071716"/></radialGradient>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto-start-reverse"><path d="M1 1 L6 4 L1 7" fill="none" stroke="#4cc9b7" stroke-width="1.5"/></marker>
+  </defs>
+  <style>
+    text { font-family: 'Segoe UI', Arial, sans-serif; }
+    .label { font-size: 24px; fill: #e3eeec; }
+    .muted { font-size: 22px; fill: #9ab2ae; }
+    .shared { font-size: 24px; fill: #8fe0d3; font-weight: 600; }
+    .head { font-size: 24px; fill: #e0d5ac; font-weight: 600; }
+  </style>
+  <rect width="640" height="960" fill="url(#glow)"/>
+  <path d="M480 0 V960 M560 0 V960 M0 160 H640 M0 320 H640 M0 480 H640 M0 640 H640 M0 800 H640" stroke="#29504a" opacity="0.18"/>
+  <text x="48" y="62" fill="#4cc9b7" font-size="21" letter-spacing="3">FEDSP-PEFT-P</text>
+  <text x="48" y="112" fill="#e3eeec" font-size="37" font-weight="600">Learn together.</text>
+  <text x="48" y="158" fill="#e3eeec" font-size="37" font-weight="600">Estimate locally.</text>
+  <rect x="100" y="202" width="492" height="156" rx="22" fill="#102724" stroke="#4cc9b7" stroke-width="2"/>
+  <text x="130" y="243" class="label" font-weight="600">Federation server</text>
+  <text x="130" y="280" class="shared">Weighted average</text>
+  <text x="130" y="312" class="muted">LoRA B + type / priority</text>
+  <text x="130" y="338" class="muted">embeddings</text>
+  <path d="M94 280 H64 V730 H94" stroke="#4cc9b7" stroke-width="2" fill="none" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <path d="M64 490 H94" stroke="#4cc9b7" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="34" y="625" transform="rotate(-90 34 625)" fill="#4cc9b7" font-size="18" letter-spacing="1">SHARED PARAMETER EXCHANGE</text>
+  <rect x="100" y="390" width="492" height="218" rx="22" fill="#102724" stroke="#29504a" stroke-width="2"/>
+  <text x="126" y="429" class="label" font-weight="600">Project A</text>
+  <text x="566" y="429" class="muted" text-anchor="end">Local issues</text>
+  <rect x="118" y="451" width="456" height="66" rx="12" fill="#123c36" stroke="#4cc9b7"/>
+  <text x="140" y="491" class="shared">Shared adapters + embeddings</text>
+  <path d="M346 519 V535 M340 529 L346 535 L352 529" fill="none" stroke="#9ab2ae" stroke-width="2"/>
+  <rect x="118" y="540" width="456" height="50" rx="12" fill="#2e3024" stroke="#c9bd8a"/>
+  <text x="346" y="573" class="head" text-anchor="middle">Personalized head A</text>
+  <rect x="100" y="630" width="492" height="218" rx="22" fill="#102724" stroke="#29504a" stroke-width="2"/>
+  <text x="126" y="669" class="label" font-weight="600">Project B</text>
+  <text x="566" y="669" class="muted" text-anchor="end">Local issues</text>
+  <rect x="118" y="691" width="456" height="66" rx="12" fill="#123c36" stroke="#4cc9b7"/>
+  <text x="140" y="731" class="shared">Shared adapters + embeddings</text>
+  <path d="M346 759 V775 M340 769 L346 775 L352 769" fill="none" stroke="#9ab2ae" stroke-width="2"/>
+  <rect x="118" y="780" width="456" height="50" rx="12" fill="#2e3024" stroke="#c9bd8a"/>
+  <text x="346" y="813" class="head" text-anchor="middle">Personalized head B</text>
+  <circle cx="112" cy="880" r="5" fill="#c9bd8a"/>
+  <text x="128" y="888" class="muted">CORN heads are not aggregated</text>
+  <text x="100" y="925" fill="#9ab2ae" font-size="20">Frozen CodeBERT + LoRA A in each client</text>
+</svg>

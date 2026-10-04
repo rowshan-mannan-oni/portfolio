@@ -52,7 +52,7 @@ export function ResearchForm({ row, action, publications }: Props) {
           placeholder="None"
           options={publications.map((p) => ({ value: p.id, label: p.title.length > 80 ? `${p.title.slice(0, 80)}…` : p.title }))}
         />
-        <ImageField name="image" label="Figure or image" folder={`research/${row?.id ?? "drafts"}`} defaultValue={row?.image} altName="image_alt" altDefaultValue={row?.image_alt} />
+        <ImageField name="image" label="Figure or image" folder={`research/${row?.id ?? "drafts"}`} defaultValue={row?.image} altName="image_alt" altDefaultValue={row?.image_alt} hint="PNG or WebP up to 5 MB. Portrait figures (e.g. 960 × 1440) suit the 320 px desktop column. The full image is shown without cropping on the site." />
       </FormSection>
 
       <FormSection title="Publishing">
