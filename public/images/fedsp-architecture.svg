@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">FedSP-PEFT-P: shared representations, personalized predictions</title>
+  <desc id="desc">Three software projects keep issue data local. Each uses frozen CodeBERT and LoRA A, shared trainable LoRA B and categorical embeddings, and a project-specific CORN prediction head. The server aggregates LoRA B and type and priority embeddings using weighted averaging. Personalized heads are not aggregated. This conceptual diagram omits experimental transport of heads to the server.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto-start-reverse"><path d="M1 1 L6 4 L1 7" fill="none" stroke="#4cc9b7" stroke-width="1.5"/></marker>
+    <marker id="localArrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M1 1 L6 4 L1 7" fill="none" stroke="#9ab2ae" stroke-width="1.5"/></marker>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#1b3532"/></pattern>
+    <g id="client">
+      <rect width="340" height="350" rx="22" fill="#102724" stroke="#29504a"/>
+      <rect x="20" y="62" width="300" height="44" rx="10" fill="#0d2321" stroke="#29504a"/>
+      <text x="170" y="90" class="body" text-anchor="middle">Issue text · type · priority</text>
+      <path d="M170 108 V126" class="local-flow"/>
+      <rect x="20" y="130" width="300" height="48" rx="10" fill="#0d2321" stroke="#29504a"/>
+      <text x="170" y="150" class="body" text-anchor="middle">CodeBERT + LoRA A</text>
+      <text x="170" y="168" class="small" text-anchor="middle">Frozen backbone &amp; adapter A</text>
+      <path d="M170 180 V198" class="local-flow"/>
+      <rect x="20" y="202" width="300" height="52" rx="10" fill="#123c36" stroke="#4cc9b7"/>
+      <text x="170" y="224" class="shared" text-anchor="middle">LoRA B + categorical embeddings</text>
+      <text x="170" y="243" class="small" text-anchor="middle">Shared trainable representation</text>
+      <path d="M170 256 V274" class="local-flow"/>
+      <rect x="20" y="278" width="300" height="52" rx="10" fill="#2e3024" stroke="#c9bd8a"/>
+      <text x="170" y="300" class="personal" text-anchor="middle">Personalized CORN head</text>
+      <text x="170" y="319" class="small" text-anchor="middle">Project-specific · not aggregated</text>
+    </g>
+  </defs>
+  <style>
+    text { font-family: 'Geist', 'Segoe UI', Arial, sans-serif; }
+    .body { fill: #e3eeec; font-size: 15px; }
+    .small { fill: #9ab2ae; font-size: 12px; }
+    .shared { fill: #8fe0d3; font-size: 14px; font-weight: 600; }
+    .personal { fill: #e0d5ac; font-size: 15px; font-weight: 600; }
+    .local-flow { fill: none; stroke: #9ab2ae; stroke-width: 1.5; marker-end: url(#localArrow); }
+    .federated-flow { fill: none; stroke: #4cc9b7; stroke-width: 1.8; marker-start: url(#arrow); marker-end: url(#arrow); }
+  </style>
+  <rect width="1200" height="820" rx="28" fill="#071716"/>
+  <rect width="1200" height="820" rx="28" fill="url(#grid)" opacity="0.65"/>
+  <text x="50" y="48" fill="#4cc9b7" font-size="12" font-weight="600" letter-spacing="2">FEDSP-PEFT-P / PERSONALIZED FEDERATED LEARNING</text>
+  <text x="50" y="90" fill="#e3eeec" font-size="32" font-weight="600">Shared learning. Project-specific estimation.</text>
+  <text x="50" y="120" class="body" fill="#9ab2ae">Collaborate across software projects while keeping raw issue data local.</text>
+  <rect x="380" y="158" width="440" height="116" rx="20" fill="#102724" stroke="#4cc9b7"/>
+  <text x="600" y="191" text-anchor="middle" fill="#e3eeec" font-size="19" font-weight="600">Federation server</text>
+  <text x="600" y="219" text-anchor="middle" class="shared">Weighted average of shared parameters</text>
+  <text x="600" y="245" text-anchor="middle" class="small">LoRA B · type embeddings · priority embeddings</text>
+  <path d="M210 354 V304 H450 V280" class="federated-flow"/>
+  <path d="M600 354 V280" class="federated-flow"/>
+  <path d="M990 354 V304 H750 V280" class="federated-flow"/>
+  <rect x="424" y="317" width="352" height="29" rx="14" fill="#071716"/>
+  <text x="600" y="336" text-anchor="middle" class="small">Upload shared updates / receive global parameters</text>
+  <use href="#client" x="40" y="360"/>
+  <use href="#client" x="430" y="360"/>
+  <use href="#client" x="820" y="360"/>
+  <text x="62" y="396" fill="#e3eeec" font-size="18" font-weight="600">Project A</text>
+  <text x="452" y="396" fill="#e3eeec" font-size="18" font-weight="600">Project B</text>
+  <text x="842" y="396" fill="#e3eeec" font-size="18" font-weight="600">Project K</text>
+  <text x="352" y="395" text-anchor="end" class="small">LOCAL DATA</text>
+  <text x="742" y="395" text-anchor="end" class="small">LOCAL DATA</text>
+  <text x="1132" y="395" text-anchor="end" class="small">LOCAL DATA</text>
+  <text x="210" y="740" text-anchor="middle" class="body">Story points → {1, 2, 3, 5, 8}</text>
+  <text x="600" y="740" text-anchor="middle" class="body">Story points → {1, 2, 3, 5, 8}</text>
+  <text x="990" y="740" text-anchor="middle" class="body">Story points → {1, 2, 3, 5, 8}</text>
+  <circle cx="320" cy="784" r="5" fill="#4cc9b7"/>
+  <text x="334" y="789" class="small">Shared &amp; aggregated</text>
+  <circle cx="520" cy="784" r="5" fill="#c9bd8a"/>
+  <text x="534" y="789" class="small">Personalized head</text>
+  <circle cx="710" cy="784" r="5" fill="#9ab2ae"/>
+  <text x="724" y="789" class="small">Frozen parameters</text>
+</svg>

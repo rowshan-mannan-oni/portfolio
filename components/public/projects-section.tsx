@@ -10,6 +10,7 @@ import { formatDateRange } from "@/lib/format/date";
 import { storageUrl } from "@/lib/storage";
 import { cn, initials, safeUrl } from "@/lib/utils";
 import { SpotlightCard } from "@/components/public/spotlight-card";
+import { DotField } from "@/components/public/dot-field";
 
 const STATUS_LABEL: Record<ProjectStatus, string> = {
   active: "Active",
@@ -93,10 +94,11 @@ function ProjectMeta({ project }: { project: ProjectWithImages }) {
 
 function ProjectPlaceholder({ title, technologies }: { title: string; technologies: string[] }) {
   return (
-    <div className="texture-dots flex size-full flex-col justify-between bg-soft/50 p-6 sm:p-8" aria-hidden="true">
-      <span className="font-serif text-5xl text-primary/70 sm:text-6xl">{initials(title)}</span>
+    <div className="texture-dots relative isolate flex size-full flex-col justify-between bg-soft/50 p-6 sm:p-8" aria-hidden="true">
+      <DotField />
+      <span className="relative font-serif text-5xl text-primary/70 sm:text-6xl">{initials(title)}</span>
       {technologies.length > 0 ? (
-        <span className="meta text-soft-fg/80">{technologies.slice(0, 3).join(" / ")}</span>
+        <span className="meta relative text-soft-fg/80">{technologies.slice(0, 3).join(" / ")}</span>
       ) : null}
     </div>
   );

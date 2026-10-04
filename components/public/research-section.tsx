@@ -174,13 +174,13 @@ function ResearchItem({ item, showPublicationLink }: { item: ResearchWithPublica
         </div>
 
         {image ? (
-          <div className="relative min-h-56 border-t border-border bg-surface-muted lg:border-l lg:border-t-0">
+          <div className="relative min-h-[30rem] border-t border-border bg-surface-muted lg:border-l lg:border-t-0">
             <Image
               src={image}
               alt={item.image_alt ?? ""}
               fill
               sizes="(min-width: 1024px) 320px, 100vw"
-              className="object-cover"
+              className="object-contain"
             />
           </div>
         ) : null}
