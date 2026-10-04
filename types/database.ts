@@ -9,6 +9,11 @@
 
 type Timestamps = { created_at: string; updated_at: string };
 
+export const PORTRAIT_STYLES = ["photo", "cutout"] as const;
+export type PortraitStyle = (typeof PORTRAIT_STYLES)[number];
+export const PORTRAIT_TEXT_POSITIONS = ["top", "center", "bottom"] as const;
+export type PortraitTextPosition = (typeof PORTRAIT_TEXT_POSITIONS)[number];
+
 export type SiteSettingsRow = {
   id: boolean;
   full_name: string;
@@ -30,6 +35,11 @@ export type SiteSettingsRow = {
   profile_image_path: string | null;
   profile_image_alt: string | null;
   profile_image_position: string;
+  portrait_style: PortraitStyle;
+  cutout_image_path: string | null;
+  portrait_backdrop_text: string | null;
+  portrait_text_position: PortraitTextPosition;
+  portrait_text_color: string | null;
   cv_path: string | null;
   cv_file_name: string | null;
   cv_updated_at: string | null;

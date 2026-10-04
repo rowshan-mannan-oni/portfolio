@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PROJECT_STATUSES, SOCIAL_PLATFORMS, VENUE_TYPES } from "@/types/database";
+import { PORTRAIT_STYLES, PORTRAIT_TEXT_POSITIONS, PROJECT_STATUSES, SOCIAL_PLATFORMS, VENUE_TYPES } from "@/types/database";
 import {
   checkbox,
   optionalPartialDate,
@@ -242,6 +242,17 @@ export const siteSettingsSchema = z.object({
     .trim()
     .regex(/^[a-z0-9% .]{1,40}$/i, "Use a CSS position such as “center 30%”.")
     .default("center 30%"),
+  portrait_style: z.enum(PORTRAIT_STYLES).default("photo"),
+  cutout_image_path: optionalStoragePath,
+  portrait_backdrop_text: optionalText(120, "Backdrop text"),
+  portrait_text_position: z.enum(PORTRAIT_TEXT_POSITIONS).default("center"),
+  portrait_text_color: z
+    .string()
+    .trim()
+    .optional()
+    .default("")
+    .refine((v) => !v || /^#[0-9a-f]{6}$/i.test(v), "Use a colour like #0f766e.")
+    .transform((v) => (v ? v.toLowerCase() : null)),
   seo_title: optionalText(120, "SEO title"),
   seo_description: optionalText(300, "SEO description"),
   seo_keywords: stringList(20, 60),

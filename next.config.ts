@@ -17,25 +17,37 @@ const supabaseSources = supabaseOrigin
   ? `${supabaseOrigin} ${supabaseOrigin.replace(/^http/, "ws")}`
   : "https://*.supabase.co wss://*.supabase.co";
 
-const csp = [
-  "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
-  "style-src 'self' 'unsafe-inline'",
-  // Any https image is allowed so Markdown posts can embed external figures.
-  `img-src 'self' data: blob: https:${isDev ? " http:" : ""}`,
-  "font-src 'self' data:",
-  `connect-src 'self' ${supabaseSources}`,
-  "media-src 'self'",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "frame-ancestors 'none'",
-  "frame-src 'none'",
-  ...(isDev ? [] : ["upgrade-insecure-requests"]),
-].join("; ");
+function buildCsp({ admin }: { admin: boolean }) {
+  // The dashboard's in-browser background remover (transformers.js) loads its
+  // WebAssembly runtime from jsDelivr and the model from the Hugging Face Hub.
+  // Only admin pages get these allowances; the public site stays strict.
+  const ml = admin
+    ? {
+        script: " 'wasm-unsafe-eval' blob: https://cdn.jsdelivr.net",
+        connect: " https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.hf.co",
+      }
+    : { script: "", connect: "" };
 
-const securityHeaders = [
-  { key: "Content-Security-Policy", value: csp },
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${ml.script}`,
+    "style-src 'self' 'unsafe-inline'",
+    // Any https image is allowed so Markdown posts can embed external figures.
+    `img-src 'self' data: blob: https:${isDev ? " http:" : ""}`,
+    "font-src 'self' data:",
+    `connect-src 'self' ${supabaseSources}${ml.connect}`,
+    ...(admin ? ["worker-src 'self' blob:"] : []),
+    "media-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "frame-src 'none'",
+    ...(isDev ? [] : ["upgrade-insecure-requests"]),
+  ].join("; ");
+}
+
+const baseHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
@@ -61,10 +73,17 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      { source: "/:path*", headers: securityHeaders },
+      { source: "/:path*", headers: baseHeaders },
+      // Public pages: strict CSP. (Two CSP headers would intersect, so the
+      // admin area is excluded here and gets its own policy below.)
+      {
+        source: "/:path((?!oni_the_boss).*)",
+        headers: [{ key: "Content-Security-Policy", value: buildCsp({ admin: false }) }],
+      },
       {
         source: "/oni_the_boss/:path*",
         headers: [
+          { key: "Content-Security-Policy", value: buildCsp({ admin: true }) },
           { key: "X-Robots-Tag", value: "noindex, nofollow" },
           { key: "Cache-Control", value: "no-store" },
         ],

@@ -23,6 +23,15 @@ export function failure(error: unknown, context: string): ActionResult {
   if (pg?.code === "23505") {
     return { ok: false, message: "That value is already in use. Please choose a different one." };
   }
+  // Undefined column (Postgres) / column not in PostgREST's schema cache.
+  if (pg?.code === "42703" || pg?.code === "PGRST204") {
+    console.error(`[admin] ${context}`, error);
+    return {
+      ok: false,
+      message:
+        "The database is missing a column. Run the newest SQL file in supabase/migrations (SQL Editor → paste → Run), then try again.",
+    };
+  }
   if (pg?.code === "42501") {
     return { ok: false, message: "Permission denied by the database. Check that your account is in admin_users." };
   }
@@ -55,6 +64,7 @@ export async function removeDocument(client: unknown, path: string | null | unde
 const MEDIA_REFERENCES: Array<[table: string, column: string]> = [
   ["site_settings", "profile_image_path"],
   ["site_settings", "og_image_path"],
+  ["site_settings", "cutout_image_path"],
   ["projects", "thumbnail"],
   ["project_images", "path"],
   ["research", "image"],

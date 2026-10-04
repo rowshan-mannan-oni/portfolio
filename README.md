@@ -164,6 +164,10 @@ Without `SUPABASE_SECRET_KEY` everything else works. The contact form then polit
 |---|---|
 | `supabase/migrations/20261003000000_initial_schema.sql` | All tables, constraints, indexes, `updated_at` triggers, the `partial_date` domain, `admin_users` + `is_admin()`, explicit grants and every RLS policy |
 | `supabase/migrations/20261003000100_storage.sql` | `media` and `documents` buckets (with MIME and size limits) and their storage policies |
+| `supabase/migrations/20261005000000_portrait_style.sql` | Hero portrait style: photo, or a background-free cutout in front of editable text |
+| `supabase/migrations/20261006000000_portrait_text_position.sql` | Position of that text (top, centre, bottom) |
+| `supabase/migrations/20261007000000_backdrop_text_lines.sql` | Allows multi-line, staggered backdrop text (up to 120 characters) |
+| `supabase/migrations/20261008000000_portrait_text_color.sql` | Optional custom colour for that text |
 | `supabase/seed.sql` | Initial content from the CV. Safe to re-run: it only fills empty tables and never overwrites your edits. |
 
 **Tables:** `admin_users`, `site_settings` (single row), `section_settings`, `social_links`, `experiences`, `education`, `research`, `publications`, `projects`, `project_images`, `skill_categories`, `skills`, `awards`, `blog_posts` (tags as a normalized `text[]` with a GIN index), `contact_messages`.
@@ -176,7 +180,11 @@ In the Supabase dashboard, open **SQL Editor → New query** and run, in order:
 
 1. the contents of `supabase/migrations/20261003000000_initial_schema.sql`
 2. the contents of `supabase/migrations/20261003000100_storage.sql`
-3. the contents of `supabase/seed.sql`
+3. the contents of `supabase/migrations/20261005000000_portrait_style.sql`
+4. the contents of `supabase/migrations/20261006000000_portrait_text_position.sql`
+5. the contents of `supabase/migrations/20261007000000_backdrop_text_lines.sql`
+6. the contents of `supabase/migrations/20261008000000_portrait_text_color.sql`
+7. the contents of `supabase/seed.sql`
 
 ### Option B — Supabase CLI
 
@@ -256,6 +264,8 @@ Both buckets are created by the storage migration. You don't need to click anyth
   - HSTS, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy` and `Permissions-Policy`
   - admin pages also send `X-Robots-Tag: noindex` and `Cache-Control: no-store`
 
+  The dashboard (`/oni_the_boss/*`) has its own CSP, which additionally allows WebAssembly, `blob:` scripts, jsDelivr and the Hugging Face Hub. These are needed only by the in-browser background remover; public pages never get these allowances.
+
   The CSP allows inline scripts because Next.js and the no-flash theme script need them. A nonce-based CSP would force every page to render dynamically and give up static caching.
 - `/oni_the_boss` is excluded from the sitemap and sends `noindex`. It is deliberately **not** listed in `robots.txt`, because that file is public and would advertise the path.
 
@@ -266,6 +276,7 @@ Go to **`/<your-site>/oni_the_boss`** and sign in.
 | Area | What you can do |
 |---|---|
 | Overview | Counts (projects, publications, posts, drafts, unread messages), shortcuts, setup checklist |
+| Hero portrait | Choose **Photo** or **Cutout with text behind**. The cutout can be generated in the browser with one click (MODNet model via transformers.js, Apache-2.0; ~25 MB downloaded once, photo never leaves your browser) or uploaded as a transparent PNG/WebP. The backdrop words are editable. |
 | Profile & SEO | Name, title, hero text, focus areas, about (Markdown), status/availability, research intro and interests, author-name variants (highlighted in publications), photo + alt text + crop focus, SEO title/description/keywords, social image, footer |
 | Sections | Show/hide, rename, set subheadings and nav labels, reorder homepage sections. A hidden section disappears from the page and the navigation. |
 | CV | Upload, replace (the old file is deleted), remove, show/hide the download buttons |

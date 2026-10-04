@@ -26,7 +26,7 @@ export async function saveSiteSettings(formData: FormData): Promise<ActionResult
 
     const { data: before } = await supabase
       .from("site_settings")
-      .select("profile_image_path, og_image_path")
+      .select("profile_image_path, og_image_path, cutout_image_path")
       .eq("id", true)
       .maybeSingle();
 
@@ -36,6 +36,7 @@ export async function saveSiteSettings(formData: FormData): Promise<ActionResult
     await removeOwnedMedia(supabase, [
       before?.profile_image_path !== parsed.data.profile_image_path ? before?.profile_image_path : null,
       before?.og_image_path !== parsed.data.og_image_path ? before?.og_image_path : null,
+      before?.cutout_image_path !== parsed.data.cutout_image_path ? before?.cutout_image_path : null,
     ]);
 
     revalidateContent();
