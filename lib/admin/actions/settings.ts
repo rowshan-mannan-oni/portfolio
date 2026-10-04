@@ -10,6 +10,8 @@ import {
   revalidateContent,
 } from "@/lib/admin/server-utils";
 import { sectionSchema, siteSettingsSchema } from "@/lib/validation/entities";
+import { diffFromDefaults, resolvePalette } from "@/lib/theme-palette";
+import { isUuid } from "@/lib/admin/server-utils";
 import { formDataToObject, zodFieldErrors } from "@/lib/validation/fields";
 import { DOCUMENTS_BUCKET, MAX_PDF_BYTES, isSafeStoragePath } from "@/lib/storage";
 import { SECTION_KEYS, type SectionKey } from "@/types/database";
@@ -43,6 +45,63 @@ export async function saveSiteSettings(formData: FormData): Promise<ActionResult
     return { ok: true, message: "Settings saved." };
   } catch (error) {
     return failure(error, "save settings");
+  }
+}
+
+/**
+ * Saves the colour palette. Input is sanitised to known tokens with #RRGGBB
+ * values; only differences from the built-in palette are stored, and an
+ * all-default palette is stored as NULL.
+ */
+export async function saveThemePalette(palette: unknown): Promise<ActionResult> {
+  try {
+    const { supabase } = await requireAdmin();
+    const overrides = diffFromDefaults(resolvePalette(palette));
+    const value = Object.keys(overrides).length > 0 ? overrides : null;
+    const { error } = await supabase.from("site_settings").update({ theme_palette: value }).eq("id", true);
+    if (error) return failure(error, "save palette");
+    revalidateContent();
+    return { ok: true, message: value ? "Palette saved." : "Palette reset to the default colours." };
+  } catch (error) {
+    return failure(error, "save palette");
+  }
+}
+
+const MAX_SAVED_PALETTES = 40;
+
+/** Saves the editor's palette to the library under a name (does not publish). */
+export async function saveNamedPalette(name: string, palette: unknown): Promise<ActionResult> {
+  try {
+    const clean = String(name ?? "").replace(/\s+/g, " ").trim().slice(0, 60);
+    if (!clean) return { ok: false, message: "Give the palette a name." };
+    const { supabase } = await requireAdmin();
+    const { count } = await supabase.from("theme_palettes").select("id", { count: "exact", head: true });
+    if ((count ?? 0) >= MAX_SAVED_PALETTES) {
+      return { ok: false, message: `You can keep up to ${MAX_SAVED_PALETTES} palettes. Delete one first.` };
+    }
+    const { data, error } = await supabase
+      .from("theme_palettes")
+      .insert({ name: clean, palette: resolvePalette(palette) })
+      .select("id")
+      .single();
+    if (error?.code === "23505") return { ok: false, message: `A palette called “${clean}” already exists.` };
+    if (error) return failure(error, "save named palette");
+    return { ok: true, message: `Saved “${clean}”.`, id: data.id };
+  } catch (error) {
+    return failure(error, "save named palette");
+  }
+}
+
+/** Removes a palette from the library. The live site is never affected. */
+export async function deleteNamedPalette(id: string): Promise<ActionResult> {
+  try {
+    if (!isUuid(id)) return { ok: false, message: "Invalid request." };
+    const { supabase } = await requireAdmin();
+    const { error } = await supabase.from("theme_palettes").delete().eq("id", id);
+    if (error) return failure(error, "delete named palette");
+    return { ok: true, message: "Palette deleted." };
+  } catch (error) {
+    return failure(error, "delete named palette");
   }
 }
 

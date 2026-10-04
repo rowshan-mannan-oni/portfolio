@@ -57,6 +57,7 @@ export const DEFAULT_SETTINGS: SiteSettingsRow = {
   portrait_backdrop_text: null,
   portrait_text_position: "center",
   portrait_text_color: null,
+  theme_palette: null,
   cv_path: null,
   cv_file_name: null,
   cv_updated_at: null,

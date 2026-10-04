@@ -23,13 +23,13 @@ export function failure(error: unknown, context: string): ActionResult {
   if (pg?.code === "23505") {
     return { ok: false, message: "That value is already in use. Please choose a different one." };
   }
-  // Undefined column (Postgres) / column not in PostgREST's schema cache.
-  if (pg?.code === "42703" || pg?.code === "PGRST204") {
+  // Undefined column/table (Postgres) or not in PostgREST's schema cache.
+  if (pg?.code === "42703" || pg?.code === "PGRST204" || pg?.code === "42P01" || pg?.code === "PGRST205") {
     console.error(`[admin] ${context}`, error);
     return {
       ok: false,
       message:
-        "The database is missing a column. Run the newest SQL file in supabase/migrations (SQL Editor → paste → Run), then try again.",
+        "The database is missing a table or column. Run the newest SQL file in supabase/migrations (SQL Editor → paste → Run), then try again.",
     };
   }
   if (pg?.code === "42501") {

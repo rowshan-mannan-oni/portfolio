@@ -40,6 +40,8 @@ export type SiteSettingsRow = {
   portrait_backdrop_text: string | null;
   portrait_text_position: PortraitTextPosition;
   portrait_text_color: string | null;
+  /** Palette overrides ({ light: {...}, dark: {...} }); see lib/theme-palette.ts. */
+  theme_palette: Record<string, unknown> | null;
   cv_path: string | null;
   cv_file_name: string | null;
   cv_updated_at: string | null;
@@ -313,6 +315,14 @@ export type ContactMessageRow = {
   created_at: string;
 };
 
+export type ThemePaletteRow = {
+  id: string;
+  name: string;
+  /** Full palette: { light: {...}, dark: {...} }; see lib/theme-palette.ts. */
+  palette: Record<string, unknown>;
+  created_at: string;
+};
+
 export type AdminUserRow = {
   user_id: string;
   role: "admin";
@@ -346,6 +356,7 @@ export type Database = {
       skills: TableDef<SkillRow, "category_id" | "name">;
       awards: TableDef<AwardRow, "title">;
       blog_posts: TableDef<BlogPostRow, "title" | "slug">;
+      theme_palettes: TableDef<ThemePaletteRow, "name" | "palette">;
       contact_messages: TableDef<
         ContactMessageRow,
         "name" | "email" | "subject" | "message"

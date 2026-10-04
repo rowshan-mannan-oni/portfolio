@@ -8,7 +8,7 @@
  */
 
 type Rgb = [number, number, number]; // 0–1, gamma-encoded sRGB
-type Oklch = { l: number; c: number; h: number };
+export type Oklch = { l: number; c: number; h: number };
 
 /** Page backgrounds of the two themes (see app/globals.css). */
 export const LIGHT_BG = "#f7fbfa";
@@ -19,6 +19,8 @@ const LIGHT_TARGET = 3.5;
 const DARK_TARGET = 9;
 
 const HEX = /^#([0-9a-f]{6})$/i;
+
+export const isHex = (value: unknown): value is string => typeof value === "string" && HEX.test(value);
 
 function hexToRgb(hex: string): Rgb | null {
   const m = HEX.exec(hex.trim());
@@ -111,17 +113,39 @@ function fitLightness(base: Oklch, bg: string, target: number, direction: "up" |
   return oklchToHex({ ...base, l: hi });
 }
 
+/** Hex → OKLCH (hue in radians), or null for invalid input. */
+export function hexToOklch(hex: string): Oklch | null {
+  const rgb = hexToRgb(hex);
+  return rgb ? rgbToOklch(rgb) : null;
+}
+
+/** OKLCH → displayable hex (chroma reduced if needed, hue preserved). */
+export function oklch(l: number, c: number, h: number): string {
+  return oklchToHex({ l: Math.min(1, Math.max(0, l)), c: Math.max(0, c), h });
+}
+
+/** Lightens/darkens until the target contrast against `bg` is met. */
+export function ensureContrast(hex: string, bg: string, target: number): string {
+  const base = hexToOklch(hex);
+  if (!base) return hex;
+  const direction = luminance(bg) > 0.5 ? "down" : "up";
+  return fitLightness(base, bg, target, direction);
+}
+
 /**
  * Returns the colour to use in each theme, or null for an invalid input.
  *  - light: the picked colour, darkened only if it's too pale for the light page.
  *  - dark:  the picked colour, lightened until it glows on the dark page.
  */
-export function adaptColor(hex: string | null | undefined): { light: string; dark: string } | null {
+export function adaptColor(
+  hex: string | null | undefined,
+  backgrounds: { light: string; dark: string } = { light: LIGHT_BG, dark: DARK_BG },
+): { light: string; dark: string } | null {
   const rgb = hex ? hexToRgb(hex) : null;
   if (!rgb) return null;
   const base = rgbToOklch(rgb);
   return {
-    light: fitLightness(base, LIGHT_BG, LIGHT_TARGET, "down"),
-    dark: fitLightness(base, DARK_BG, DARK_TARGET, "up"),
+    light: fitLightness(base, backgrounds.light, LIGHT_TARGET, "down"),
+    dark: fitLightness(base, backgrounds.dark, DARK_TARGET, "up"),
   };
 }

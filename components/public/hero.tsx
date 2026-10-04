@@ -7,6 +7,7 @@ import { SocialIcon } from "@/components/public/social-icon";
 import { storageUrl } from "@/lib/storage";
 import { monogramFor } from "@/lib/site";
 import { adaptColor } from "@/lib/color";
+import { resolvePalette } from "@/lib/theme-palette";
 
 type Props = {
   settings: SiteSettingsRow;
@@ -129,6 +130,10 @@ export function Hero({ settings, cvUrl, links, anchors }: Props) {
               text={backdropText}
               position={settings.portrait_text_position ?? "center"}
               color={settings.portrait_text_color ?? null}
+              backgrounds={(() => {
+                const palette = resolvePalette(settings.theme_palette);
+                return { light: palette.light.bg, dark: palette.dark.bg };
+              })()}
             />
           ) : (
             <figure className="relative w-36 sm:w-44 lg:ml-auto lg:w-full lg:max-w-[22rem]">
@@ -221,6 +226,7 @@ function CutoutPortrait({
   text,
   position,
   color,
+  backgrounds,
 }: {
   src: string;
   alt: string;
@@ -228,10 +234,12 @@ function CutoutPortrait({
   position: PortraitTextPosition;
   /** Custom #RRGGBB; null uses the theme teal. */
   color: string | null;
+  /** Page backgrounds of the active palette, for contrast adaptation. */
+  backgrounds: { light: string; dark: string };
 }) {
   // Picked colour, adapted per theme (darkened if too pale in light mode,
   // lightened to stay vivid in dark mode). Null keeps the theme teal.
-  const themed = adaptColor(color);
+  const themed = adaptColor(color, backgrounds);
   const lines = parseBackdrop(text);
   // Width of a row in em: measured ~GLYPH_EM per uppercase Anton glyph, plus
   // the row's indent. Without a frame the words may run slightly wider than
