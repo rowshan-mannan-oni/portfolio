@@ -8,6 +8,7 @@ import { storageUrl } from "@/lib/storage";
 import { monogramFor } from "@/lib/site";
 import { adaptColor } from "@/lib/color";
 import { resolvePalette } from "@/lib/theme-palette";
+import { BlurText } from "@/components/public/blur-text";
 
 type Props = {
   settings: SiteSettingsRow;
@@ -44,7 +45,7 @@ export function Hero({ settings, cvUrl, links, anchors }: Props) {
             id="hero-heading"
             className="text-[2.5rem] font-semibold leading-[1.04] tracking-[-0.03em] text-fg [overflow-wrap:anywhere] sm:text-6xl lg:text-[4.1rem]"
           >
-            {settings.full_name}
+            <BlurText text={settings.full_name} />
           </h1>
 
           {settings.professional_title ? (

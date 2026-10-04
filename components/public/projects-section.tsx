@@ -9,6 +9,7 @@ import { ExternalLink, MetaList, Section, TagList } from "@/components/public/se
 import { formatDateRange } from "@/lib/format/date";
 import { storageUrl } from "@/lib/storage";
 import { cn, initials, safeUrl } from "@/lib/utils";
+import { SpotlightCard } from "@/components/public/spotlight-card";
 
 const STATUS_LABEL: Record<ProjectStatus, string> = {
   active: "Active",
@@ -177,7 +178,7 @@ function CompactProject({ project }: { project: ProjectWithImages }) {
   const extra = project.technologies.length - tech.length;
 
   return (
-    <article className="card flex w-full flex-col p-5 transition-colors hover:border-border-strong sm:p-6">
+    <SpotlightCard className="card flex w-full flex-col p-5 transition-colors hover:border-border-strong sm:p-6">
       {thumb ? (
         <div className="relative -mx-5 -mt-5 mb-5 aspect-[16/9] overflow-hidden rounded-t-[13px] border-b border-border bg-surface-muted sm:-mx-6 sm:-mt-6">
           <Image
@@ -210,6 +211,6 @@ function CompactProject({ project }: { project: ProjectWithImages }) {
           ))}
         </div>
       ) : null}
-    </article>
+    </SpotlightCard>
   );
 }
