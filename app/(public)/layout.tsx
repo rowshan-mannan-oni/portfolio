@@ -12,6 +12,7 @@ import {
 } from "@/lib/data/public";
 import { buildNavItems, cvDownloadUrl, monogramFor } from "@/lib/site";
 import { storageUrl } from "@/lib/storage";
+import { buildThemeCss } from "@/lib/theme-palette";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
@@ -54,8 +55,13 @@ export default async function PublicLayout({ children }: { children: React.React
     .map(resolveSocialLink)
     .filter((l): l is ResolvedLink => l !== null);
 
+  // Admin-chosen colours override the CSS tokens. buildThemeCss re-validates
+  // every value, so only #RRGGBB colours can reach this stylesheet.
+  const themeCss = buildThemeCss(settings.theme_palette);
+
   return (
     <>
+      {themeCss ? <style id="theme-palette" dangerouslySetInnerHTML={{ __html: themeCss }} /> : null}
       <SiteHeader
         name={settings.full_name}
         monogram={monogramFor(settings)}

@@ -9,6 +9,11 @@
 
 type Timestamps = { created_at: string; updated_at: string };
 
+export const PORTRAIT_STYLES = ["photo", "cutout"] as const;
+export type PortraitStyle = (typeof PORTRAIT_STYLES)[number];
+export const PORTRAIT_TEXT_POSITIONS = ["top", "center", "bottom"] as const;
+export type PortraitTextPosition = (typeof PORTRAIT_TEXT_POSITIONS)[number];
+
 export type SiteSettingsRow = {
   id: boolean;
   full_name: string;
@@ -30,6 +35,13 @@ export type SiteSettingsRow = {
   profile_image_path: string | null;
   profile_image_alt: string | null;
   profile_image_position: string;
+  portrait_style: PortraitStyle;
+  cutout_image_path: string | null;
+  portrait_backdrop_text: string | null;
+  portrait_text_position: PortraitTextPosition;
+  portrait_text_color: string | null;
+  /** Palette overrides ({ light: {...}, dark: {...} }); see lib/theme-palette.ts. */
+  theme_palette: Record<string, unknown> | null;
   cv_path: string | null;
   cv_file_name: string | null;
   cv_updated_at: string | null;
@@ -303,6 +315,14 @@ export type ContactMessageRow = {
   created_at: string;
 };
 
+export type ThemePaletteRow = {
+  id: string;
+  name: string;
+  /** Full palette: { light: {...}, dark: {...} }; see lib/theme-palette.ts. */
+  palette: Record<string, unknown>;
+  created_at: string;
+};
+
 export type AdminUserRow = {
   user_id: string;
   role: "admin";
@@ -336,6 +356,7 @@ export type Database = {
       skills: TableDef<SkillRow, "category_id" | "name">;
       awards: TableDef<AwardRow, "title">;
       blog_posts: TableDef<BlogPostRow, "title" | "slug">;
+      theme_palettes: TableDef<ThemePaletteRow, "name" | "palette">;
       contact_messages: TableDef<
         ContactMessageRow,
         "name" | "email" | "subject" | "message"

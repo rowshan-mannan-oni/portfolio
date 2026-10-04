@@ -18,6 +18,7 @@ import {
   LogOut,
   Menu,
   Newspaper,
+  Palette,
   PanelsTopLeft,
   Share2,
   UserRound,
@@ -41,6 +42,7 @@ function navGroups(unread: number): Array<{ title: string; links: NavLink[] }> {
       links: [
         { href: p("/profile"), label: "Profile & SEO", icon: UserRound },
         { href: p("/sections"), label: "Sections", icon: PanelsTopLeft },
+        { href: p("/theme"), label: "Theme & colours", icon: Palette },
         { href: p("/cv"), label: "CV", icon: FileUp },
         { href: p("/social"), label: "Contact & social", icon: Share2 },
       ],

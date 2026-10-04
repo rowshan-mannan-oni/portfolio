@@ -70,6 +70,7 @@ If it ever leaks, go to **API Keys** to revoke it and create a new one, then upd
 1. Open **SQL Editor → New query**.
 2. Open `supabase/migrations/20261003000000_initial_schema.sql` from the repository, copy **all** of it, paste it, and click **Run**. You should see *Success. No rows returned*.
 3. In a new query, do the same for `supabase/migrations/20261003000100_storage.sql`.
+4. Then `supabase/migrations/20261005000000_portrait_style.sql` and `20261006000000_portrait_text_position.sql` , `20261007000000_backdrop_text_lines.sql` and `20261008000000_portrait_text_color.sql` (hero cutout style), then `20261009000000_theme_palette.sql` and `20261010000000_theme_palette_library.sql` (colour palette and saved palettes). In general: run every file in `supabase/migrations/` once, in filename order.
 
 **CLI route (alternative):**
 

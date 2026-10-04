@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import { Anton, Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { SITE_URL } from "@/lib/env";
 import { THEME_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 const geist = Geist({ variable: "--font-geist", subsets: ["latin", "latin-ext"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+// Condensed poster face for the words behind the hero cutout.
+const anton = Anton({ variable: "--font-anton", subsets: ["latin", "latin-ext"], weight: "400", preload: false });
 const newsreader = Newsreader({
   variable: "--font-newsreader",
   subsets: ["latin", "latin-ext"],
@@ -30,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       // The theme script adds classes before hydration.
       suppressHydrationWarning
-      className={`${geist.variable} ${geistMono.variable} ${newsreader.variable}`}
+      className={`${geist.variable} ${geistMono.variable} ${newsreader.variable} ${anton.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />

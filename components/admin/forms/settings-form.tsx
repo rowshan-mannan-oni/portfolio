@@ -6,6 +6,8 @@ import { AdminForm, FormSection } from "@/components/admin/admin-form";
 import { ListField, SelectField, TagsField, TextAreaField, TextField } from "@/components/admin/fields";
 import { ImageField } from "@/components/admin/image-field";
 import { MarkdownEditor } from "@/components/admin/markdown-editor";
+import { CutoutField } from "@/components/admin/cutout-field";
+import { ColorField } from "@/components/admin/color-field";
 
 const POSITIONS = [
   { value: "center top", label: "Top" },
@@ -49,6 +51,52 @@ export function SettingsForm({ settings, action }: { settings: SiteSettingsRow; 
           options={POSITIONS}
           hint="Which part of the photo stays visible when cropped."
         />
+      </FormSection>
+
+      <FormSection
+        title="Hero portrait style"
+        description="Show the photo above, or a background-free cutout of you standing in front of large text."
+      >
+        <SelectField
+          name="portrait_style"
+          label="Style"
+          required
+          defaultValue={s.portrait_style}
+          options={[
+            { value: "photo", label: "Photo" },
+            { value: "cutout", label: "Cutout with text behind" },
+          ]}
+          hint="If the cutout is missing, the photo is shown instead."
+        />
+        <TextAreaField
+          name="portrait_backdrop_text"
+          label="Text behind the cutout"
+          defaultValue={s.portrait_backdrop_text}
+          rows={4}
+          maxLength={120}
+          placeholder={"Eat\n Sleep\n  Code\nRepeat"}
+          hint="One row per line; start a line with spaces to push it right. Written on one line, the words stagger automatically (Software → Engineer). Empty uses your title."
+        />
+        <SelectField
+          name="portrait_text_position"
+          label="Text position"
+          required
+          defaultValue={s.portrait_text_position ?? "center"}
+          options={[
+            { value: "top", label: "Top — above your head" },
+            { value: "center", label: "Centre — behind you" },
+            { value: "bottom", label: "Bottom" },
+          ]}
+          hint="Where the words sit behind the cutout."
+        />
+        <ColorField
+          name="portrait_text_color"
+          label="Text colour"
+          defaultValue={s.portrait_text_color ?? null}
+          themeLabel="theme teal"
+          hint="Empty keeps the theme teal. Any colour you pick is adapted automatically: darkened if too pale on the light page, brightened to stay vivid in dark mode."
+        />
+        <CutoutField name="cutout_image_path" defaultValue={s.cutout_image_path} photoPath={s.profile_image_path} />
       </FormSection>
 
       <FormSection title="Hero">
