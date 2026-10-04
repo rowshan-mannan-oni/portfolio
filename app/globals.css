@@ -1,5 +1,64 @@
 @import "tailwindcss";
 
+/* React Bits effects, adapted to the public portfolio's theme and reveals. */
+.hero-blur-word {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+}
+
+.spotlight-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.spotlight-card-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    320px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
+    color-mix(in srgb, var(--primary) 14%, transparent),
+    transparent 80%
+  );
+}
+
+.spotlight-card:focus-within .spotlight-card-glow {
+  opacity: 1;
+  background: radial-gradient(320px circle at 50% 50%, color-mix(in srgb, var(--primary) 14%, transparent), transparent 80%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .spotlight-card:hover .spotlight-card-glow {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spotlight-card-glow {
+    transition: opacity 350ms ease;
+  }
+
+  .js [data-reveal]:not([data-revealed]) .hero-blur-word {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(12px);
+  }
+
+  .js [data-revealed] .hero-blur-word {
+    animation: hero-blur-in 650ms cubic-bezier(0.2, 0.65, 0.3, 1) var(--blur-delay, 0ms) both;
+  }
+}
+
+@keyframes hero-blur-in {
+  from { opacity: 0; filter: blur(8px); transform: translateY(12px); }
+  60% { opacity: 0.8; filter: blur(2px); transform: translateY(-1px); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
+
 /* Class-based dark mode, set by the inline theme script before first paint. */
 @custom-variant dark (&:where(.dark, .dark *));
 
