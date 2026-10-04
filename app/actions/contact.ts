@@ -2,6 +2,7 @@
 
 import { createHash } from "node:crypto";
 import { headers } from "next/headers";
+import { isContactEmailConfigured, sendContactEmail } from "@/lib/contact-email";
 import { createSecretClient } from "@/lib/supabase/admin";
 import { contactSchema, type ContactFormState, type ContactInput } from "@/lib/validation/contact";
 
@@ -89,6 +90,15 @@ export async function submitContact(
     };
   }
 
+  if (!isContactEmailConfigured()) {
+    console.error("[contact] RESEND_API_KEY or CONTACT_EMAIL_FROM is not configured.");
+    return {
+      status: "error",
+      message: "The contact form is temporarily unavailable. Please email rowshanmannanoni@gmail.com instead.",
+      values: raw,
+    };
+  }
+
   // 4. Rate limiting using a salted hash of the IP (the raw IP is never stored).
   const ip = await clientIp();
   const ipHash = ip ? hashIp(ip) : null;
@@ -121,10 +131,26 @@ export async function submitContact(
   }
 
   // 5. Store.
-  const { error } = await supabase.from("contact_messages").insert({ ...parsed.data, ip_hash: ipHash });
+  const { data: saved, error } = await supabase
+    .from("contact_messages")
+    .insert({ ...parsed.data, ip_hash: ipHash })
+    .select("id")
+    .single();
   if (error) {
     console.error("[contact] insert failed", error);
     return { status: "error", message: "Something went wrong. Please try again later.", values: raw };
+  }
+
+  // Keep the dashboard copy even when the email provider is unavailable.
+  try {
+    await sendContactEmail(parsed.data, saved.id);
+  } catch {
+    console.error("[contact] email delivery failed; message retained in dashboard", saved.id);
+    return {
+      status: "error",
+      message: "Your message was saved, but the email notification could not be sent. Please email rowshanmannanoni@gmail.com directly if your message is urgent.",
+      values: raw,
+    };
   }
 
   return SUCCESS;
