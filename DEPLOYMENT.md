@@ -255,6 +255,8 @@ Also check that an anonymous private window can't reach `/oni_the_boss/projects`
 
 ### C13. Test the contact form
 
+Before testing, add server-only `RESEND_API_KEY` and `CONTACT_EMAIL_FROM` to Vercel's environment variables and redeploy. Create the key in [Resend](https://resend.com/api-keys), verify a sending domain, and use an address on that domain for `CONTACT_EMAIL_FROM` (for example, `Portfolio <contact@yourdomain.com>`). Messages are sent to **rowshanmannanoni@gmail.com**, and Reply addresses the visitor. After submitting, check Gmail (including Spam) as well as the dashboard. An email failure is shown to the visitor; the saved dashboard copy remains available.
+
 1. In a private window, fill in the homepage contact form. Wait at least 3 seconds before submitting (the form ignores submissions that come too fast).
 2. You should see *Message sent*.
 3. In the dashboard, **Messages** shows it as *Unread*, and the sidebar shows a badge.

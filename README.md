@@ -148,6 +148,10 @@ Without Supabase variables the site still builds and renders, with empty content
 
 All variables are documented in [`.env.example`](.env.example).
 
+For a free initial test without buying a domain, create a Resend Free account using **rowshanmannanoni@gmail.com**. Set `RESEND_API_KEY` to your API key and `CONTACT_EMAIL_FROM` to `Portfolio <onboarding@resend.dev>`. This test sender is restricted to your Resend account's email address and is intended for testing; production sending uses a verified domain. Resend's Free quota is currently 100 emails per day and 3,000 per month. Put real credentials in `.env` or your hosting environment, never `.env.example`.
+
+Contact submissions are saved in the dashboard and emailed to **rowshanmannanoni@gmail.com**. Set server-only `RESEND_API_KEY` and `CONTACT_EMAIL_FROM` in your local environment and hosting environment, then redeploy. Use a sender on a verified Resend domain. Replies go to the visitor's email address. Without these variables, the form asks visitors to email directly. If email delivery fails after saving, the dashboard retains the message and the visitor sees an explicit notification failure.
+
 | Variable | Where | Required | Purpose |
 |---|---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | browser + server | **yes** | Project URL, e.g. `https://abcd.supabase.co` |
