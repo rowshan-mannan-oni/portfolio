@@ -343,6 +343,7 @@ export type Database = {
   public: {
     Tables: {
       admin_users: TableDef<AdminUserRow, "user_id">;
+      site_visitors: TableDef<{ id: string; first_seen_at: string; last_seen_at: string }, "id">;
       site_settings: TableDef<SiteSettingsRow, never>;
       section_settings: TableDef<SectionSettingsRow, "key" | "heading">;
       social_links: TableDef<SocialLinkRow, "label">;
@@ -365,6 +366,8 @@ export type Database = {
     Views: Record<never, never>;
     Functions: {
       is_admin: { Args: Record<never, never>; Returns: boolean };
+      record_site_visit: { Args: { visitor_id: string }; Returns: undefined };
+      visitor_stats: { Args: Record<never, never>; Returns: { total: number; active: number }[] };
     };
     Enums: Record<never, never>;
     CompositeTypes: Record<never, never>;

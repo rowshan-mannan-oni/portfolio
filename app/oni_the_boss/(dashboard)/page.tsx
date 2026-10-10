@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { VisitorMetrics } from "@/components/admin/visitor-metrics";
 import Link from "next/link";
 import { ArrowRight, BookOpen, FileUp, FolderKanban, Newspaper, Plus } from "lucide-react";
 import { PageHeader } from "@/components/admin/page-header";
@@ -67,6 +68,8 @@ export default async function DashboardPage() {
           </Link>
         ))}
       </section>
+
+      <VisitorMetrics />
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <section className="card p-5">
