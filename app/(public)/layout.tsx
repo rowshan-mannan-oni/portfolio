@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { VisitorTracker } from "@/components/public/visitor-tracker";
 import { SiteHeader } from "@/components/public/site-header";
 import { SiteFooter } from "@/components/public/site-footer";
 import { RevealObserver } from "@/components/public/reveal-observer";
@@ -78,6 +79,7 @@ export default async function PublicLayout({ children }: { children: React.React
         links={links}
       />
       <RevealObserver />
+      <VisitorTracker />
     </>
   );
 }

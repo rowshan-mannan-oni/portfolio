@@ -47,7 +47,7 @@ This becomes `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 
 > On older projects that only show **Legacy API keys**, use the `anon` `public` key instead. The app accepts either.
 
-### A5. Get the secret key (needed for the contact form)
+### A5. Get the secret key (needed for the contact form and visitor tracking)
 
 On the same **API Keys** page, under **Secret keys**, reveal and copy a secret key (starts with `sb_secret_`). If none exists, create one.
 
@@ -59,7 +59,7 @@ The secret key **bypasses Row Level Security**. Anyone who has it can read and m
 
 - never put it in a variable starting with `NEXT_PUBLIC_` (those are shipped to browsers);
 - never commit it (`.env.local` is git-ignored);
-- in this project it is used only on the server, for contact-form inserts. The publishable key is designed to be public because RLS limits what it can do.
+- in this project it is used only on the server, for contact-form inserts and anonymous visitor heartbeats. The publishable key is designed to be public because RLS limits what it can do.
 
 If it ever leaks, go to **API Keys** to revoke it and create a new one, then update Vercel.
 

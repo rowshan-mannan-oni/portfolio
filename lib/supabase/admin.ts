@@ -6,7 +6,7 @@ import type { Database } from "@/types/database";
 /**
  * Privileged client using the SECRET key (bypasses RLS).
  *
- * Used ONLY by the public contact form to insert messages and count recent
+ * Used by visitor heartbeats and the public contact form to insert messages and count recent
  * submissions for rate limiting. Never import this from a Client Component —
  * the "server-only" import above makes the build fail if that happens.
  *
